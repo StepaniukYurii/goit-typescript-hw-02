@@ -2,10 +2,15 @@ import { useState } from "react";
 import styles from "./SearchBar.module.css";
 import { toast } from "react-hot-toast";
 import { SlMagnifier } from "react-icons/sl";
-const SearchBar = ({ onSubmit }) => {
-  const [query, setQuery] = useState("");
 
-  const handleSubmit = (e) => {
+interface SearchBarProps {
+  onSubmit: (query: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSubmit }) => {
+  const [query, setQuery] = useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) {
       toast.error("Please enter text to search images!");

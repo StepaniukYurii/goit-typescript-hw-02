@@ -6,18 +6,9 @@ import Loader from "./Loader/Loader";
 import ErrorMessage from "./ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "./ImageModal/ImageModal";
-
+import { Image } from "./types";
 const API_KEY = "VyyLZ6pkhpU9lkfKivwu3oYEkRRdCx-_737kAcIT41s";
 const BASE_URL = "https://api.unsplash.com/search/photos";
-
-type Image = {
-  id: string;
-  alt_description: string | null;
-  urls: {
-    full: string;
-    thumb: string;
-  };
-};
 
 type AppState = {
   images: Image[];
@@ -41,13 +32,19 @@ export default function App() {
   const fetchImages = useCallback(async (): Promise<void> => {
     if (!appState.query) return;
 
+    type UnsplashResponse = {
+      results: Image[];
+      total: number;
+      total_pages: number;
+    };
+
     try {
       setAppState((prevState) => ({
         ...prevState,
         isLoading: true,
         error: null,
       }));
-      const response = await axios.get(BASE_URL, {
+      const response = await axios.get<UnsplashResponse>(BASE_URL, {
         params: {
           query: appState.query,
           page: appState.page,
